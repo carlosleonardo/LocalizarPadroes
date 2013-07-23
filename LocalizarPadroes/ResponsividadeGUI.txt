@@ -1,0 +1,12 @@
+Princípio básico para manter a interação com o usuário durante um processamento demorado:
+
+Permitir que de tempos em tempos permitir o processamento do loop de eventos para
+evitar congelamento.
+
+O momento certo é dentro de um loop
+
+Usar um timer para dar timeout no thread principal(que sempre é criado) e verificar se o processamento terminou.
+Isto é para garantir que a tela seja utilizável. Frameworks costumam ter um método que já faz isso, mas nem
+sempre é adequado.
+
+Outra opção é usar um thread para executar o processo demorado.
