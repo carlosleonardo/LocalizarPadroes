@@ -40,6 +40,7 @@ OBJECTS_DIR = objs
 UI_DIR = ui
 
 #Suporte multi-plataforma
+#Teste de alteração
 
 #Versões de boost sob a qual compilar
 BOOST_VERSION_UNIX=1.46
