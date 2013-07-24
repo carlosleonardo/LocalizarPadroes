@@ -59,11 +59,17 @@ unix {
 win32 {
     BOOST_INSTALL_DIR=C:\Boost
     win32-msvc2010:QMAKE_CXXFLAGS += /Zc:wchar_t -D_SCL_SECURE_NO_WARNINGS
+    win32-msvc2012:QMAKE_CXXFLAGS += -D_SCL_SECURE_NO_WARNINGS
+
     INCLUDEPATH += $$BOOST_INSTALL_DIR/boost_$${BOOST_VERSION_WIN}
     LIBS += -L$$BOOST_INSTALL_DIR/boost_$${BOOST_VERSION_WIN}/lib
-    win32-msvc2010:LIBS += -lboost_system-vc100-mt-$$BOOST_LIB_VERSION_WIN -lboost_filesystem-vc100-mt-$$BOOST_LIB_VERSION_WIN -lboost_regex-vc100-mt-$$BOOST_LIB_VERSION_WIN -lboost_thread-vc100-mt-$$BOOST_LIB_VERSION_WIN
-    win32-msvc2012:LIBS += -llibboost_system-vc110-mt-$$BOOST_LIB_VERSION_WIN -llibboost_filesystem-vc110-mt-$$BOOST_LIB_VERSION_WIN -llibboost_regex-vc110-mt-$$BOOST_LIB_VERSION_WIN -llibboost_thread-vc110-mt-$$BOOST_LIB_VERSION_WIN
-    win32-g++: LIBS += -llibboost_system-mgw47-mt-$$BOOST_LIB_VERSION_WIN -llibboost_filesystem-mgw47-mt-$$BOOST_LIB_VERSION_WIN -llibboost_regex-mgw47-mt-$$BOOST_LIB_VERSION_WIN -llibboost_thread-mgw47-mt-$$BOOST_LIB_VERSION_WIN
+
+#Exceto o gcc, os demais compiladores windows usam auto link. Não é preciso especificar as bibliotecas
+win32-g++:LIBS += \
+    -llibboost_system-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
+    -llibboost_filesystem-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
+    -llibboost_regex-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
+    -llibboost_thread-mgw47-mt-$$BOOST_LIB_VERSION_WIN
 }
 
 OTHER_FILES += \
