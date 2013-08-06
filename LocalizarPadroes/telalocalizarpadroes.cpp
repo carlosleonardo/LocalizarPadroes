@@ -44,8 +44,8 @@ void TelaLocalizarPadroes::inicializarComponentes()
     // Cria o cabeçalho
     QHeaderView* cabecalho = new QHeaderView(Qt::Horizontal, ui->lvwLocalizados);
     cabecalho->setModel(goModeloDados);
-    cabecalho->setVisible(true);
-
+    cabecalho->setVisible(false);
+    ui->lvwLocalizados->setHorizontalHeader(cabecalho);
     move(100,100);
 }
 
@@ -170,6 +170,7 @@ void TelaLocalizarPadroes::preencheLista(const InformacoesArquivo& infoArquivo)
 
     loListaInfoArquivo << itemArquivo << itemOcorrencias << itemLocalizacao;
     goModeloDados->appendRow(loListaInfoArquivo);
+    ui->lvwLocalizados->horizontalHeader()->setVisible(true);
 }
 
 bool TelaLocalizarPadroes::pesquisaLista(const InformacoesArquivo &infoArquivo)
