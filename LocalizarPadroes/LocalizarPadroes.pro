@@ -43,7 +43,7 @@ UI_DIR = ui
 #Teste de alteração
 
 #Versões de boost sob a qual compilar
-BOOST_VERSION_UNIX=1.46
+BOOST_VERSION_UNIX=1.46.1
 BOOST_VERSION_WIN=1_54_0
 BOOST_LIB_VERSION_WIN=1_54
 
