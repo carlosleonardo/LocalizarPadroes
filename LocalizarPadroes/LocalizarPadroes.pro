@@ -14,7 +14,6 @@ CONFIG += precompile_header
 
 SOURCES += main.cpp\
     controlelocalizarpadroes.cpp \
-    processobuscaarquivos.cpp \
     telalocalizarpadroes.cpp \
     util.cpp \
     telatestarexpressaoregular.cpp \
@@ -23,7 +22,6 @@ SOURCES += main.cpp\
 HEADERS  += \
     controlelocalizarpadroes.h \
     stdcpp.h \
-    processobuscaarquivos.h \
     telalocalizarpadroes.h \
     util.h \
     telatestarexpressaoregular.h \
