@@ -33,7 +33,8 @@ ControleLocalizarPadroes::ControleLocalizarPadroes()
     gbPesquisando = false;
 }
 
-// Realiza busca recursiva pelo padrão a partir da pasta informada
+// Realiza busca recursiva pelo padrão a partir da pasta informada.
+// Este será executado como um thread
 bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicial)
 {
     if (nomePastaInicial=="" || gsPadraoPesquisa == "") {
@@ -48,10 +49,12 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
         // Recupera os subdiretórios e arquivos do diretório informado e faz uma busca em cada um deles
         directory_iterator loIterador(loCaminho);
 
-        gbPesquisando = true;
-
         while (loIterador != directory_iterator()) {
             nomeCaminho = absolute(loIterador->path()).generic_string();
+
+            if (!estaPesquisando()) {
+                break;
+            }
 
             if (is_regular_file(loIterador->status())) {
 
@@ -60,9 +63,8 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
                 InformacoesArquivo loInfoArquivo;
 
                 loInfoArquivo.gsNomeArquivo = nomeCaminho;
-                if (!notificadorBusca.empty() &&  !notificadorBusca(loInfoArquivo)) {
-                    ativar();
-                    break;
+                if (!notificadorBusca.empty()) {
+                    notificadorBusca(loInfoArquivo);
                 }
 
                 if (existePadrao(nomeCaminho, loInfoArquivo)) {
@@ -100,29 +102,8 @@ void ControleLocalizarPadroes::setPadraoPesquisa(const std::string &psPadraoPesq
 
 bool ControleLocalizarPadroes::estaPesquisando()
 {
-    bool result;
-
-    m.lock();
-    result = gbPesquisando;
-    m.unlock();
-
-    return result;
+    return gbPesquisando;
 }
-
-void ControleLocalizarPadroes::ativar()
-{
-    m.lock();
-    gbPesquisando = true;
-    m.unlock();
-}
-
-void ControleLocalizarPadroes::desativar()
-{
-    m.lock();
-    gbPesquisando = false;
-    m.unlock();
-}
-
 
 // Localiza o padrão dentro do arquivo.
 bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, InformacoesArquivo &poInfoArquivo)
@@ -196,4 +177,3 @@ void ControleLocalizarPadroes::validarOpcoesBusca()
         gbDistinguirMaiusculas = true;
     }
 }
-

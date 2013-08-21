@@ -11,12 +11,17 @@
 #include <boost/thread/mutex.hpp>
 #endif
 
+/**
+ * @brief The ControleLocalizarPadroes class
+ *
+ * Realiza a busca de padrões de texto
+ */
 class ControleLocalizarPadroes
 {
 public:
 
     // --------------------------------- Eventos ------------------------------------------------------ //
-    typedef boost::signals2::signal <bool (const InformacoesArquivo& infoArquivo)> NotificadorPesquisando;
+    typedef boost::signals2::signal <void (const InformacoesArquivo& infoArquivo)> NotificadorPesquisando;
     typedef boost::signals2::signal <void (const InformacoesArquivo& infoArquivo)> NotificadorLocalizado;
     typedef boost::signals2::signal <void ()> NotificadorFinalizado;
 
@@ -95,18 +100,13 @@ public:
 
     bool estaPesquisando();
 
-    void ativar();
-
-    void desativar();
 private:
     std::string gsPadraoPesquisa;
     bool gbUsarExpressoesRegulares;
     bool gbPalavraInteira;
     bool gbUsarNomeArquivoParaBusca;
     bool gbDistinguirMaiusculas;
-    bool gbPesquisando;
-    boost::mutex m;
-
+    volatile bool gbPesquisando;
 
     bool existePadrao(const std::string &psCaminho, InformacoesArquivo &poInfoArquivo);
     inline long tamanhoArquivo(const std::string& psCaminho);

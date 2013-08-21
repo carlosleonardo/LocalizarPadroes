@@ -17,7 +17,9 @@ SOURCES += main.cpp\
     telalocalizarpadroes.cpp \
     util.cpp \
     telatestarexpressaoregular.cpp \
-    informacoesarquivo.cpp
+    informacoesarquivo.cpp \
+    adaptadorinterfacethread.cpp \
+    threadboost.cpp
 
 HEADERS  += \
     controlelocalizarpadroes.h \
@@ -25,7 +27,9 @@ HEADERS  += \
     telalocalizarpadroes.h \
     util.h \
     telatestarexpressaoregular.h \
-    informacoesarquivo.h
+    informacoesarquivo.h \
+    adaptadorinterfacethread.h \
+    threadboost.h
 
 FORMS    += \
     telalocalizarpadroes.ui \
