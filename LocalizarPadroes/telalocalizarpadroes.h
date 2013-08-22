@@ -5,6 +5,7 @@
 
 #include "stdcpp.h"
 #include "controlelocalizarpadroes.h"
+#include "adaptadorinterfacethread.h"
 
 
 namespace Ui {
@@ -41,6 +42,7 @@ private:
     QStandardItemModel* goModeloDados;
     bool gbCancelar;
     QPushButton* btnCancelar;
+    boost::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
 
     void preencheLista(const InformacoesArquivo& infoArquivo);
     bool pesquisaLista(const InformacoesArquivo& infoArquivo);

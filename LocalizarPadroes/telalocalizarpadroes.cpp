@@ -1,3 +1,4 @@
+#include "executorbusca.h"
 #include "telalocalizarpadroes.h"
 #include "ui_telalocalizarpadroes.h"
 
@@ -27,6 +28,7 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
                 boost::bind(&TelaLocalizarPadroes::pesquisaLista, this, _1));
 
     inicializarComponentes();
+
 }
 
 void TelaLocalizarPadroes::inicializarComponentes()
@@ -116,10 +118,11 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     definirPadraoBusca(lsBusca);
 
     // Executa o thread de pesquisa
+    //threadPesquisa.reset(new ExecutorBusca(boost::bind(&ControleLocalizarPadroes::buscarArquivos, goLocalizarPadroes));
     boost::thread meuThread(boost::bind(&ControleLocalizarPadroes::buscarArquivos,
                              &goLocalizarPadroes, _1), lsPasta.toUtf8().constData());
-    //goLocalizarPadroes.buscarArquivos(lsPasta.toUtf8().constData());
-    meuThread.join();
+    //ThreadBoost* thread = threadPesquisa.get();
+    //thread->iniciar();
 
     QApplication::restoreOverrideCursor();
 
@@ -183,7 +186,7 @@ void TelaLocalizarPadroes::on_btnCancelar_clicked()
 {
     ui->btnProcurar->setEnabled(true);
     btnCancelar->setEnabled(false);
-    gbCancelar = true;
+    //threadPesquisa.get()->interromper();
 
 }
 
