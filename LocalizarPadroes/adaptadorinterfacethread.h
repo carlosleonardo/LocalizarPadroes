@@ -18,9 +18,9 @@ public:
     void interromper();
     bool interrompido();
 
-    static AdaptadorInterfaceThread *threadAtual();
-protected:
     virtual AdaptadorInterfaceThread* obterInstancia()=0;
+protected:
+
     virtual void bloquear()=0;
     virtual void desbloquear()=0;
     volatile bool cancelado;

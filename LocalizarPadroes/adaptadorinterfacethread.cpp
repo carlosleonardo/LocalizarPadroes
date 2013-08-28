@@ -20,8 +20,4 @@ bool AdaptadorInterfaceThread::interrompido()
     return cancelado;
 }
 
-AdaptadorInterfaceThread *AdaptadorInterfaceThread::threadAtual()
-{
-    return obterInstancia();
-}
 

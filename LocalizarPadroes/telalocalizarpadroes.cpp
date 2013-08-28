@@ -23,10 +23,13 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     // Conectamos o slot ao sinal da nossa classe controle de MVC
     // Como o sinal tem um parâmetro, precisamos indicá-lo através do argumento boost _1
     goLocalizarPadroes.notificadorLocalizado.connect(
-                boost::bind(&TelaLocalizarPadroes::preencheLista, this, _1));
+                boost::bind(&TelaLocalizarPadroes::delegarPreencherLista, this, _1));
     goLocalizarPadroes.notificadorBusca.connect(
                 boost::bind(&TelaLocalizarPadroes::pesquisaLista, this, _1));
 
+
+    QObject::connect(this, SIGNAL(preencheLista(InformacoesArquivo)), SLOT(on_preencherLista(InformacoesArquivo)),
+                     Qt::QueuedConnection);
     inicializarComponentes();
 
 }
@@ -118,11 +121,10 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     definirPadraoBusca(lsBusca);
 
     // Executa o thread de pesquisa
-    //threadPesquisa.reset(new ExecutorBusca(boost::bind(&ControleLocalizarPadroes::buscarArquivos, goLocalizarPadroes));
-    boost::thread meuThread(boost::bind(&ControleLocalizarPadroes::buscarArquivos,
-                             &goLocalizarPadroes, _1), lsPasta.toUtf8().constData());
-    //ThreadBoost* thread = threadPesquisa.get();
-    //thread->iniciar();
+    threadPesquisa.reset(new ExecutorBusca(std::bind(&ControleLocalizarPadroes::buscarArquivos,
+                                                       &goLocalizarPadroes, lsPasta.toUtf8().constData())
+                                           ));
+    threadPesquisa.get()->iniciar();
 
     QApplication::restoreOverrideCursor();
 
@@ -147,7 +149,44 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
 
 }
 
-void TelaLocalizarPadroes::preencheLista(const InformacoesArquivo& infoArquivo)
+void TelaLocalizarPadroes::delegarPreencherLista(const InformacoesArquivo& infoArquivo)
+{
+    emit on_preencherLista(infoArquivo);
+}
+
+bool TelaLocalizarPadroes::pesquisaLista(const InformacoesArquivo &infoArquivo)
+{
+    QCoreApplication::processEvents();
+    return gbCancelar;
+}
+
+void TelaLocalizarPadroes::on_btnCancelar_clicked()
+{
+    ui->btnProcurar->setEnabled(true);
+    btnCancelar->setEnabled(false);
+    threadPesquisa.get()->interromper();
+}
+
+void TelaLocalizarPadroes::on_chkConsiderarCaixaLetra_toggled(bool checked)
+{
+    goLocalizarPadroes.setMaiusculas(checked);
+}
+
+void TelaLocalizarPadroes::on_chkExpressoesRegulares_toggled(bool checked)
+{
+    goLocalizarPadroes.setUsarExpressoesRegulares(checked);
+    habilitadoExpressoesRegulares();
+}
+
+void TelaLocalizarPadroes::on_btnTestarExpressaoRegular_clicked()
+{
+    TelaTestarExpressaoRegular dlgTestarExpressao(this);
+
+    dlgTestarExpressao.exec();
+}
+
+// Preenche de fato a lista
+void TelaLocalizarPadroes::on_preencherLista(const InformacoesArquivo &infoArquivo)
 {
     QFileInfo nomeArquivo(infoArquivo.nomeArquivo().c_str());
 
@@ -174,38 +213,6 @@ void TelaLocalizarPadroes::preencheLista(const InformacoesArquivo& infoArquivo)
     loListaInfoArquivo << itemArquivo << itemOcorrencias << itemLocalizacao;
     goModeloDados->appendRow(loListaInfoArquivo);
     ui->lvwLocalizados->horizontalHeader()->setVisible(true);
-}
-
-bool TelaLocalizarPadroes::pesquisaLista(const InformacoesArquivo &infoArquivo)
-{
-    QCoreApplication::processEvents();
-    return gbCancelar;
-}
-
-void TelaLocalizarPadroes::on_btnCancelar_clicked()
-{
-    ui->btnProcurar->setEnabled(true);
-    btnCancelar->setEnabled(false);
-    //threadPesquisa.get()->interromper();
-
-}
-
-void TelaLocalizarPadroes::on_chkConsiderarCaixaLetra_toggled(bool checked)
-{
-    goLocalizarPadroes.setMaiusculas(checked);
-}
-
-void TelaLocalizarPadroes::on_chkExpressoesRegulares_toggled(bool checked)
-{
-    goLocalizarPadroes.setUsarExpressoesRegulares(checked);
-    habilitadoExpressoesRegulares();
-}
-
-void TelaLocalizarPadroes::on_btnTestarExpressaoRegular_clicked()
-{
-    TelaTestarExpressaoRegular dlgTestarExpressao(this);
-
-    dlgTestarExpressao.exec();
 }
 
 void TelaLocalizarPadroes::habilitadoExpressoesRegulares()

@@ -30,7 +30,7 @@ ControleLocalizarPadroes::ControleLocalizarPadroes()
     gbPalavraInteira = false;
     gbUsarNomeArquivoParaBusca = false;
 
-    gbPesquisando = false;
+    gbPesquisando = true;
 }
 
 // Realiza busca recursiva pelo padrão a partir da pasta informada.

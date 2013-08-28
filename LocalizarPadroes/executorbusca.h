@@ -15,7 +15,7 @@ class ExecutorBusca : public ThreadBoost
 public:
     typedef std::function<bool (const std::string&)> Funcao;
 
-    ExecutorBusca(Funcao& f);
+    ExecutorBusca(Funcao f);
 
     std::string getCaminhoArquivo() const;
     void setCaminhoArquivo(const std::string &value);

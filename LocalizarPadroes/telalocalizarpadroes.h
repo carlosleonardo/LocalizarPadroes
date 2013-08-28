@@ -35,6 +35,11 @@ private slots:
 
      void on_btnTestarExpressaoRegular_clicked();
 
+     void on_preencherLista(const InformacoesArquivo& infoArquivo);
+
+signals:
+     void preencheLista(const InformacoesArquivo& infoArquivo);
+
 private:
     Ui::TelaLocalizarPadroes *ui;
 
@@ -44,7 +49,7 @@ private:
     QPushButton* btnCancelar;
     boost::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
 
-    void preencheLista(const InformacoesArquivo& infoArquivo);
+    void delegarPreencherLista(const InformacoesArquivo& infoArquivo);
     bool pesquisaLista(const InformacoesArquivo& infoArquivo);
     void inicializarComponentes();
     void habilitadoExpressoesRegulares();
