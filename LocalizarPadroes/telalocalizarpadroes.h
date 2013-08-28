@@ -22,6 +22,7 @@ public:
 
     void definirPadraoBusca(QString lsBusca);
 
+    void executarThread(QString pasta);
 private slots:
      void on_btnAlterarPasta_clicked();
 

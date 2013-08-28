@@ -78,6 +78,20 @@ void TelaLocalizarPadroes::definirPadraoBusca(QString lsBusca)
 #endif
 }
 
+void TelaLocalizarPadroes::executarThread(QString pasta)
+{
+    ExecutorBusca::Funcao f;
+#if _MSC_VER > 1600
+    f = std::bind(&ControleLocalizarPadroes::buscarArquivos,
+                                        &goLocalizarPadroes, pasta.toUtf8().constData());
+#else
+    f = boost::bind(&ControleLocalizarPadroes::buscarArquivos,
+                    &goLocalizarPadroes, pasta.toStdString());
+#endif
+    threadPesquisa.reset(new ExecutorBusca(f));
+    threadPesquisa.get()->iniciar();
+}
+
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
 {
     QString lsPasta = ui->txtPastaInicial->text();
@@ -121,10 +135,7 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     definirPadraoBusca(lsBusca);
 
     // Executa o thread de pesquisa
-    threadPesquisa.reset(new ExecutorBusca(std::bind(&ControleLocalizarPadroes::buscarArquivos,
-                                                       &goLocalizarPadroes, lsPasta.toUtf8().constData())
-                                           ));
-    threadPesquisa.get()->iniciar();
+    executarThread(lsPasta);
 
     QApplication::restoreOverrideCursor();
 
@@ -149,6 +160,8 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
 
 }
 
+
+// Delegamos, pois a atualização da UI deve ser feita pela thread que a criou.
 void TelaLocalizarPadroes::delegarPreencherLista(const InformacoesArquivo& infoArquivo)
 {
     emit on_preencherLista(infoArquivo);
@@ -160,11 +173,17 @@ bool TelaLocalizarPadroes::pesquisaLista(const InformacoesArquivo &infoArquivo)
     return gbCancelar;
 }
 
+// TODO: Encontrar forma de adaptar para o VC++ 2010
 void TelaLocalizarPadroes::on_btnCancelar_clicked()
 {
     ui->btnProcurar->setEnabled(true);
     btnCancelar->setEnabled(false);
-    threadPesquisa.get()->interromper();
+#if _MSC_VER > 1600
+    AdaptadorInterfaceThread *adaptadorInterface = threadPesquisa.get();
+    adaptadorInterface->interromper();
+#else
+
+#endif
 }
 
 void TelaLocalizarPadroes::on_chkConsiderarCaixaLetra_toggled(bool checked)

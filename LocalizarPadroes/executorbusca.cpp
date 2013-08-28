@@ -14,7 +14,6 @@ void ExecutorBusca::setCaminhoArquivo(const std::string &value)
     caminhoArquivo = value;
 }
 
-
 void ExecutorBusca::executar()
 {
     if (funcao) {

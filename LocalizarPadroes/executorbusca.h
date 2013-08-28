@@ -3,7 +3,11 @@
 
 #include "threadboost.h"
 
+#if _MSC_VER > 1600
 #include <functional>
+#else
+#include <boost/functional.hpp>
+#endif
 
 /**
  * @brief The ExecutorBusca class
@@ -13,7 +17,11 @@
 class ExecutorBusca : public ThreadBoost
 {
 public:
+#if _MSC_VER > 1600
     typedef std::function<bool (const std::string&)> Funcao;
+#else
+    typedef boost::function<bool (const std::string&)> Funcao;
+#endif
 
     ExecutorBusca(Funcao f);
 
