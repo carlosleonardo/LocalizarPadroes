@@ -62,14 +62,19 @@ unix {
 # para não dar erros de linkedição em boost::filesystem3
 win32 {
     BOOST_INSTALL_DIR=C:\Boost
-    win32-msvc2010:QMAKE_CXXFLAGS += /Zc:wchar_t -D_SCL_SECURE_NO_WARNINGS
-    win32-msvc2012:QMAKE_CXXFLAGS += -D_SCL_SECURE_NO_WARNINGS
+    lessThan(QT_MAJOR_VERSION, 5) {
+       lessThan(QT_MINOR_VERSION, 1) {
+          MSVC_FLAG_QT = /Zc:wchar_t
+       }
+    }
+    msvc2010:QMAKE_CXXFLAGS += $$MSVC_FLAG_QT -D_SCL_SECURE_NO_WARNINGS
+    msvc2012:QMAKE_CXXFLAGS += -D_SCL_SECURE_NO_WARNINGS
 
     INCLUDEPATH += $$BOOST_INSTALL_DIR/boost_$${BOOST_VERSION_WIN}
     LIBS += -L$$BOOST_INSTALL_DIR/boost_$${BOOST_VERSION_WIN}/lib
 
 #Exceto o gcc, os demais compiladores windows usam auto link. Não é preciso especificar as bibliotecas
-win32-g++:LIBS += \
+    g++:LIBS += \
     -llibboost_system-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
     -llibboost_filesystem-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
     -llibboost_regex-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
