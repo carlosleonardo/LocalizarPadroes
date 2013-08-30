@@ -20,10 +20,14 @@ public:
     bool interrompido();
 
     virtual AdaptadorInterfaceThread* obterInstancia()=0;
-protected:
-
     virtual void bloquear()=0;
     virtual void desbloquear()=0;
+    virtual void juntar()=0;
+    virtual void esperar(int milisegundos)=0;
+    virtual void dormir()=0;
+    virtual void acordar()=0;
+protected:
+
     volatile bool cancelado;
 };
 
