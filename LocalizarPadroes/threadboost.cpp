@@ -23,3 +23,8 @@ AdaptadorInterfaceThread *ThreadBoost::obterInstancia()
 {
     return this;
 }
+
+void ThreadBoost::concederTempo()
+{
+    boost::this_thread::yield();
+}

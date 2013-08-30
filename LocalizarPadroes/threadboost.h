@@ -31,6 +31,10 @@ protected:
     // AdaptadorInterfaceThread interface
 protected:
     AdaptadorInterfaceThread *obterInstancia();
+
+    // AdaptadorInterfaceThread interface
+public:
+    void concederTempo();
 };
 
 #endif // THREADBOOST_H

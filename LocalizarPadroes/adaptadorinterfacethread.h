@@ -15,6 +15,7 @@ public:
     virtual ~AdaptadorInterfaceThread();
 
     virtual void iniciar()=0;
+    virtual void concederTempo()=0;
     void interromper();
     bool interrompido();
 
