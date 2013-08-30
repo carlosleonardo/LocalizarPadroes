@@ -105,6 +105,11 @@ bool ControleLocalizarPadroes::estaPesquisando()
     return gbPesquisando;
 }
 
+void ControleLocalizarPadroes::cancelarPesquisa()
+{
+    gbPesquisando = false;
+}
+
 // Localiza o padrão dentro do arquivo.
 bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, InformacoesArquivo &poInfoArquivo)
 {
@@ -177,3 +182,4 @@ void ControleLocalizarPadroes::validarOpcoesBusca()
         gbDistinguirMaiusculas = true;
     }
 }
+

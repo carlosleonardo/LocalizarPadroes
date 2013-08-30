@@ -22,14 +22,22 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
 
     // Conectamos o slot ao sinal da nossa classe controle de MVC
     // Como o sinal tem um parâmetro, precisamos indicá-lo através do argumento boost _1
+    // Nos delegates, emitimos um signal Qt
     goLocalizarPadroes.notificadorLocalizado.connect(
                 boost::bind(&TelaLocalizarPadroes::delegarPreencherLista, this, _1));
     goLocalizarPadroes.notificadorBusca.connect(
-                boost::bind(&TelaLocalizarPadroes::pesquisaLista, this, _1));
+                boost::bind(&TelaLocalizarPadroes::delegarPesquisarLista, this, _1));
+    goLocalizarPadroes.notificadorFinalizado.connect(
+                boost::bind(&TelaLocalizarPadroes::delegarFinalizado, this));
 
-
+    // Vinculamos os signals e slots de forma enfileirada.
+    qRegisterMetaType<InformacoesArquivo>("InformacoesArquivo");
     QObject::connect(this, SIGNAL(preencheLista(InformacoesArquivo)), SLOT(on_preencherLista(InformacoesArquivo)),
                      Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(pesquisarLista(InformacoesArquivo)), SLOT(on_pesquisarLista(InformacoesArquivo)),
+                     Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(finalizadaBusca()), SLOT(on_finalizarBusca()),Qt::QueuedConnection);
+
     inicializarComponentes();
 
 }
@@ -78,9 +86,10 @@ void TelaLocalizarPadroes::definirPadraoBusca(QString lsBusca)
 #endif
 }
 
-void TelaLocalizarPadroes::executarThread(QString pasta)
+void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 {
     ExecutorBusca::Funcao f;
+
 #if _MSC_VER > 1600
     f = std::bind(&ControleLocalizarPadroes::buscarArquivos,
                                         &goLocalizarPadroes, pasta.toUtf8().constData());
@@ -90,6 +99,7 @@ void TelaLocalizarPadroes::executarThread(QString pasta)
 #endif
     threadPesquisa.reset(new ExecutorBusca(f));
     threadPesquisa.get()->iniciar();
+    //threadPesquisa.get()->juntar();
 }
 
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
@@ -128,62 +138,65 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     QStringList loListaCabecalho;
     loListaCabecalho << "Nome" << trUtf8("Ocorrências") << "Local";
     goModeloDados->setHorizontalHeaderLabels(loListaCabecalho);
+    ui->lvwLocalizados->horizontalHeader()->setVisible(true);
 
-    QTime tempo;
-    tempo.start();
+    m_tempo.start();
 
     definirPadraoBusca(lsBusca);
 
     // Executa o thread de pesquisa
-    executarThread(lsPasta);
+    executarThreadPesquisa(lsPasta);
 
-    QApplication::restoreOverrideCursor();
+//    QApplication::restoreOverrideCursor();
 
-    float tempoGasto = tempo.elapsed();
-    QString lsTempo;
+//    float tempoGasto = m_tempo.elapsed();
+//    QString lsTempo;
 
-    qDebug("%f", tempoGasto);
-    if (tempoGasto < 1000) {
-        lsTempo = " millisegundos";
-    } else if (tempoGasto >= 1000 && tempoGasto <= 1000*60) {
-        lsTempo = "segundo(s)";
-        tempoGasto /= 1000;
-    } else if (tempoGasto > 1000*60 && tempoGasto <= 1000*60*60) {
-        lsTempo = "minuto(s)";
-        tempoGasto /= 1000*60;
-    }
+//    qDebug("%f", tempoGasto);
+//    if (tempoGasto < 1000) {
+//        lsTempo = " millisegundos";
+//    } else if (tempoGasto >= 1000 && tempoGasto <= 1000*60) {
+//        lsTempo = "segundo(s)";
+//        tempoGasto /= 1000;
+//    } else if (tempoGasto > 1000*60 && tempoGasto <= 1000*60*60) {
+//        lsTempo = "minuto(s)";
+//        tempoGasto /= 1000*60;
+//    }
 
-    statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivos com o padrão em %2") + lsTempo).
-                             arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
-    btnCancelar->setEnabled(false);
-    ui->btnProcurar->setEnabled(true);
-
+//    statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivos com o padrão em %2") + lsTempo).
+//                             arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
+//    //btnCancelar->setEnabled(false);
+//    //ui->btnProcurar->setEnabled(true);
 }
-
 
 // Delegamos, pois a atualização da UI deve ser feita pela thread que a criou.
 void TelaLocalizarPadroes::delegarPreencherLista(const InformacoesArquivo& infoArquivo)
 {
-    emit on_preencherLista(infoArquivo);
+    emit preencheLista(infoArquivo);
 }
 
-bool TelaLocalizarPadroes::pesquisaLista(const InformacoesArquivo &infoArquivo)
+bool TelaLocalizarPadroes::delegarPesquisarLista(const InformacoesArquivo &infoArquivo)
 {
-    QCoreApplication::processEvents();
-    return gbCancelar;
+    emit pesquisarLista(infoArquivo);
+    return false;
 }
 
-// TODO: Encontrar forma de adaptar para o VC++ 2010
+void TelaLocalizarPadroes::delegarFinalizado()
+{
+    emit finalizadaBusca();
+}
+
 void TelaLocalizarPadroes::on_btnCancelar_clicked()
 {
     ui->btnProcurar->setEnabled(true);
     btnCancelar->setEnabled(false);
-#if _MSC_VER > 1600
-    AdaptadorInterfaceThread *adaptadorInterface = threadPesquisa.get();
-    adaptadorInterface->interromper();
-#else
 
-#endif
+    AdaptadorInterfaceThread *adaptadorInterface = threadPesquisa.get();
+    adaptadorInterface->bloquear();
+    goLocalizarPadroes.cancelarPesquisa();
+    adaptadorInterface->desbloquear();
+
+    adaptadorInterface->interromper();
 }
 
 void TelaLocalizarPadroes::on_chkConsiderarCaixaLetra_toggled(bool checked)
@@ -231,7 +244,35 @@ void TelaLocalizarPadroes::on_preencherLista(const InformacoesArquivo &infoArqui
 
     loListaInfoArquivo << itemArquivo << itemOcorrencias << itemLocalizacao;
     goModeloDados->appendRow(loListaInfoArquivo);
-    ui->lvwLocalizados->horizontalHeader()->setVisible(true);
+}
+
+void TelaLocalizarPadroes::on_pesquisarLista(const InformacoesArquivo &infoArquivo)
+{
+    QCoreApplication::processEvents();
+}
+
+void TelaLocalizarPadroes::on_finalizarBusca()
+{
+    QApplication::restoreOverrideCursor();
+
+    float tempoGasto = m_tempo.elapsed();
+    QString lsTempo;
+
+    qDebug("%f", tempoGasto);
+    if (tempoGasto < 1000) {
+        lsTempo = " millisegundos";
+    } else if (tempoGasto >= 1000 && tempoGasto <= 1000*60) {
+        lsTempo = "segundo(s)";
+        tempoGasto /= 1000;
+    } else if (tempoGasto > 1000*60 && tempoGasto <= 1000*60*60) {
+        lsTempo = "minuto(s)";
+        tempoGasto /= 1000*60;
+    }
+
+    statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivos com o padrão em %2") + lsTempo).
+                             arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
+    btnCancelar->setEnabled(false);
+    ui->btnProcurar->setEnabled(true);
 }
 
 void TelaLocalizarPadroes::habilitadoExpressoesRegulares()
