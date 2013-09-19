@@ -18,6 +18,8 @@ public:
     // AdaptadorInterfaceThread interface
 public:
     void iniciar();
+    void concederTempo();
+    AdaptadorInterfaceThread *obterInstancia();
 
 private:
     boost::mutex meuMutex;
@@ -29,8 +31,11 @@ protected:
     virtual void executar()=0;
 
     // AdaptadorInterfaceThread interface
-protected:
-    AdaptadorInterfaceThread *obterInstancia();
+public:
+    void juntar();
+    void esperar(int milisegundos);
+    void dormir();
+    void acordar();
 };
 
 #endif // THREADBOOST_H

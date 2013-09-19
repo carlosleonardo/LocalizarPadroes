@@ -100,6 +100,8 @@ public:
 
     bool estaPesquisando();
 
+    void cancelarPesquisa();
+
 private:
     std::string gsPadraoPesquisa;
     bool gbUsarExpressoesRegulares;
@@ -112,6 +114,7 @@ private:
     inline long tamanhoArquivo(const std::string& psCaminho);
 
     void validarOpcoesBusca();
+
 };
 
 #endif // CONTROLELOCALIZARPADROES_H

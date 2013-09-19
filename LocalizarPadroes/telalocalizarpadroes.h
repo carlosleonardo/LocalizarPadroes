@@ -2,15 +2,17 @@
 #define TELALOCALIZARPADROES_H
 
 #include <QMainWindow>
+#include <QTime>
 
 #include "stdcpp.h"
 #include "controlelocalizarpadroes.h"
 #include "adaptadorinterfacethread.h"
 
-
 namespace Ui {
 class TelaLocalizarPadroes;
 }
+
+
 
 class TelaLocalizarPadroes : public QMainWindow
 {
@@ -22,7 +24,7 @@ public:
 
     void definirPadraoBusca(QString lsBusca);
 
-    void executarThread(QString pasta);
+    void executarThreadPesquisa(QString pasta);
 private slots:
      void on_btnAlterarPasta_clicked();
 
@@ -38,8 +40,14 @@ private slots:
 
      void on_preencherLista(const InformacoesArquivo& infoArquivo);
 
+     void on_pesquisarLista(const InformacoesArquivo& infoArquivo);
+
+     void on_finalizarBusca();
+
 signals:
      void preencheLista(const InformacoesArquivo& infoArquivo);
+     void pesquisarLista(const InformacoesArquivo& infoArquivo);
+     void finalizadaBusca();
 
 private:
     Ui::TelaLocalizarPadroes *ui;
@@ -49,9 +57,13 @@ private:
     bool gbCancelar;
     QPushButton* btnCancelar;
     boost::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
+    QTime m_tempo;
 
+    // Eventos usados pela pesquisa de arquivos
     void delegarPreencherLista(const InformacoesArquivo& infoArquivo);
-    bool pesquisaLista(const InformacoesArquivo& infoArquivo);
+    bool delegarPesquisarLista(const InformacoesArquivo& infoArquivo);
+    void delegarFinalizado();
+
     void inicializarComponentes();
     void habilitadoExpressoesRegulares();
 };
