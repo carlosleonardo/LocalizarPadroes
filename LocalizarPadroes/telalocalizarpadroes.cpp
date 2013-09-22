@@ -92,7 +92,7 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 
 #if _MSC_VER > 1600
     f = std::bind(&ControleLocalizarPadroes::buscarArquivos,
-                                        &goLocalizarPadroes, pasta.toUtf8().constData());
+                                        &goLocalizarPadroes, pasta.toStdString());
 #else
     f = boost::bind(&ControleLocalizarPadroes::buscarArquivos,
                     &goLocalizarPadroes, pasta.toStdString());
