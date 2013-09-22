@@ -45,18 +45,23 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
 
         path loCaminho(nomePastaInicial);
         std::string nomeCaminho;
+        system::error_code erro;
 
         // Recupera os subdiretórios e arquivos do diretório informado e faz uma busca em cada um deles
         directory_iterator loIterador(loCaminho);
 
         while (loIterador != directory_iterator()) {
-            nomeCaminho = absolute(loIterador->path()).generic_string();
+            nomeCaminho = absolute(loIterador->path()).make_preferred().generic_string();
 
             if (!estaPesquisando()) {
                 break;
             }
 
-            if (is_regular_file(loIterador->status())) {
+            if (is_regular_file(loIterador->path(), erro )) {
+
+                if (erro.value()==EACCES) {
+                    std::cerr << erro.message() << std::endl;
+                }
 
                 // Notifica que arquivo está sendo pesquisado, e se localizado, notifica isto também
                 // Caso tenha interrompido, cancela a pesquisa
@@ -73,7 +78,10 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
                     }
                 }
             }
-            else if (is_directory(loIterador->status())) {
+            else if (is_directory(loIterador->path(), erro)) {
+                if (erro.value()==EACCES) {
+                    std::cerr << erro.message() << std::endl;
+                }
                 buscarArquivos(nomeCaminho);
             }
             loIterador++;
