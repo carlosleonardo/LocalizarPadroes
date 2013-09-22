@@ -99,7 +99,6 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 #endif
     threadPesquisa.reset(new ExecutorBusca(f));
     threadPesquisa.get()->iniciar();
-    //threadPesquisa.get()->juntar();
 }
 
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
