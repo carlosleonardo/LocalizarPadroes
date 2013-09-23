@@ -145,27 +145,6 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
 
     // Executa o thread de pesquisa
     executarThreadPesquisa(lsPasta);
-
-//    QApplication::restoreOverrideCursor();
-
-//    float tempoGasto = m_tempo.elapsed();
-//    QString lsTempo;
-
-//    qDebug("%f", tempoGasto);
-//    if (tempoGasto < 1000) {
-//        lsTempo = " millisegundos";
-//    } else if (tempoGasto >= 1000 && tempoGasto <= 1000*60) {
-//        lsTempo = "segundo(s)";
-//        tempoGasto /= 1000;
-//    } else if (tempoGasto > 1000*60 && tempoGasto <= 1000*60*60) {
-//        lsTempo = "minuto(s)";
-//        tempoGasto /= 1000*60;
-//    }
-
-//    statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivos com o padrão em %2") + lsTempo).
-//                             arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
-//    //btnCancelar->setEnabled(false);
-//    //ui->btnProcurar->setEnabled(true);
 }
 
 // Delegamos, pois a atualização da UI deve ser feita pela thread que a criou.
