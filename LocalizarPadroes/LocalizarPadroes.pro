@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LocalizarPadroes
 TEMPLATE = app
-CONFIG += precompile_header
+CONFIG += precompile_header c++11
 
 SOURCES += main.cpp\
     controlelocalizarpadroes.cpp \
@@ -44,16 +44,12 @@ OBJECTS_DIR = objs
 UI_DIR = ui
 
 #Suporte multi-plataforma
-#Teste de alteração
 
-#Versões de boost sob a qual compilar
-BOOST_VERSION_UNIX=1_54_0
-BOOST_VERSION_WIN=1_54_0
-BOOST_LIB_VERSION_WIN=1_54
-
+win32:g++:GCC_VERSION=48
+CONFIG += boost
 
 unix {
-    BOOST_INSTALL_DIR=../../../instlocal
+
     INCLUDEPATH += $$BOOST_INSTALL_DIR/boost-$${BOOST_VERSION_UNIX}/include
     LIBS += -L$$BOOST_INSTALL_DIR/boost-$${BOOST_VERSION_UNIX}/lib -lboost_filesystem -lboost_regex -lboost_system
     LIBS += -lboost_thread
@@ -62,7 +58,6 @@ unix {
 # Força o MSBuild a tratar wchar_t como tipo interno
 # para não dar erros de linkedição em boost::filesystem3
 win32 {
-    BOOST_INSTALL_DIR=C:\Boost
     lessThan(QT_MAJOR_VERSION, 5) {
        lessThan(QT_MINOR_VERSION, 1) {
           MSVC_FLAG_QT = /Zc:wchar_t
@@ -71,15 +66,12 @@ win32 {
     msvc2010:QMAKE_CXXFLAGS += $$MSVC_FLAG_QT -D_SCL_SECURE_NO_WARNINGS
     msvc2012:QMAKE_CXXFLAGS += -D_SCL_SECURE_NO_WARNINGS
 
-    INCLUDEPATH += $$BOOST_INSTALL_DIR/boost_$${BOOST_VERSION_WIN}
-    LIBS += -L$$BOOST_INSTALL_DIR/boost_$${BOOST_VERSION_WIN}/lib
-
 #Exceto o gcc, os demais compiladores windows usam auto link. Não é preciso especificar as bibliotecas
     g++:LIBS += \
-    -llibboost_system-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
-    -llibboost_filesystem-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
-    -llibboost_regex-mgw47-mt-$$BOOST_LIB_VERSION_WIN \
-    -llibboost_thread-mgw47-mt-$$BOOST_LIB_VERSION_WIN
+    -llibboost_system-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN \
+    -llibboost_filesystem-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN \
+    -llibboost_regex-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN \
+    -llibboost_thread-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN
 }
 
 OTHER_FILES += \
