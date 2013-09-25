@@ -14,13 +14,13 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Usamos o modelo padrão que recebe strings
+    // Usamos o modelo padrão que recebe strings, para usar na listview
     goModeloDados = new QStandardItemModel();
     ui->lvwLocalizados->setModel(goModeloDados);
 
     gbCancelar = false;
 
-    // Conectamos o slot ao sinal da nossa classe controle de MVC
+    // Conectamos o slot ao sinal boost da nossa classe controle de MVC
     // Como o sinal tem um parâmetro, precisamos indicá-lo através do argumento boost _1
     // Nos delegates, emitimos um signal Qt
     goLocalizarPadroes.notificadorLocalizado.connect(
@@ -30,7 +30,7 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     goLocalizarPadroes.notificadorFinalizado.connect(
                 boost::bind(&TelaLocalizarPadroes::delegarFinalizado, this));
 
-    // Vinculamos os signals e slots de forma enfileirada.
+    // Vinculamos os signals personalizados e slots de forma enfileirada.
     qRegisterMetaType<InformacoesArquivo>("InformacoesArquivo");
     QObject::connect(this, SIGNAL(preencheLista(InformacoesArquivo)), SLOT(on_preencherLista(InformacoesArquivo)),
                      Qt::QueuedConnection);
@@ -99,6 +99,7 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 #endif
     threadPesquisa.reset(new ExecutorBusca(f));
     threadPesquisa.get()->iniciar();
+
 }
 
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
@@ -125,8 +126,7 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     }
 
     goModeloDados->clear();
-    ui->btnProcurar->setEnabled(false);
-    btnCancelar->setEnabled(true);
+    habilitarPesquisa(false);
 
     // Muda o cursor da aplicação enquanto faz a pesquisa
 
@@ -142,6 +142,7 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     m_tempo.start();
 
     definirPadraoBusca(lsBusca);
+    goLocalizarPadroes.inicializarPesquisa();
 
     // Executa o thread de pesquisa
     executarThreadPesquisa(lsPasta);
@@ -166,8 +167,7 @@ void TelaLocalizarPadroes::delegarFinalizado()
 
 void TelaLocalizarPadroes::on_btnCancelar_clicked()
 {
-    ui->btnProcurar->setEnabled(true);
-    btnCancelar->setEnabled(false);
+    habilitarPesquisa(true);
 
     AdaptadorInterfaceThread *adaptadorInterface = threadPesquisa.get();
     adaptadorInterface->bloquear();
@@ -175,6 +175,14 @@ void TelaLocalizarPadroes::on_btnCancelar_clicked()
     adaptadorInterface->desbloquear();
 
     adaptadorInterface->interromper();
+
+}
+
+void TelaLocalizarPadroes::habilitarPesquisa(bool habilitar)
+{
+    ui->grpProcura->setEnabled(habilitar);
+    ui->grpOpcoes->setEnabled(habilitar);
+    btnCancelar->setEnabled(!habilitar);
 }
 
 void TelaLocalizarPadroes::on_chkConsiderarCaixaLetra_toggled(bool checked)
@@ -249,8 +257,7 @@ void TelaLocalizarPadroes::on_finalizarBusca()
 
     statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivos com o padrão em %2") + lsTempo).
                              arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
-    btnCancelar->setEnabled(false);
-    ui->btnProcurar->setEnabled(true);
+
 }
 
 void TelaLocalizarPadroes::habilitadoExpressoesRegulares()

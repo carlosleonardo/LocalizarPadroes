@@ -24,6 +24,7 @@ public:
 private:
     boost::mutex meuMutex;
     boost::shared_ptr<boost::thread> subprocesso;
+    boost::condition_variable condicao;
 
 protected:
     void bloquear();

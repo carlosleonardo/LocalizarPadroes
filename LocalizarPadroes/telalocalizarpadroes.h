@@ -66,6 +66,7 @@ private:
 
     void inicializarComponentes();
     void habilitadoExpressoesRegulares();
+    void habilitarPesquisa(bool habilitar);
 };
 
 #endif // TELALOCALIZARPADROES_H

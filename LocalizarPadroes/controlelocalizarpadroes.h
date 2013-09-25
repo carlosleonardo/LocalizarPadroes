@@ -4,6 +4,7 @@
 #include "stdcpp.h"
 #include "util.h"
 #include "informacoesarquivo.h"
+#include "adaptadorinterfacethread.h"
 
 #include <vector>
 #ifndef Q_MOC_RUN
@@ -102,6 +103,7 @@ public:
 
     void cancelarPesquisa();
 
+    void inicializarPesquisa();
 private:
     std::string gsPadraoPesquisa;
     bool gbUsarExpressoesRegulares;
@@ -112,6 +114,7 @@ private:
 
     bool existePadrao(const std::string &psCaminho, InformacoesArquivo &poInfoArquivo);
     inline long tamanhoArquivo(const std::string& psCaminho);
+
 
     void validarOpcoesBusca();
 

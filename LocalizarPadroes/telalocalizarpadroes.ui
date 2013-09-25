@@ -18,7 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="grpProcura">
         <property name="title">
          <string>Procurar nos arquivos</string>
         </property>
@@ -75,7 +75,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_3">
+       <widget class="QGroupBox" name="grpOpcoes">
         <property name="title">
          <string>Opções de busca</string>
         </property>

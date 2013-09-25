@@ -118,6 +118,11 @@ void ControleLocalizarPadroes::cancelarPesquisa()
     gbPesquisando = false;
 }
 
+void ControleLocalizarPadroes::inicializarPesquisa()
+{
+    gbPesquisando = true;
+}
+
 // Localiza o padrão dentro do arquivo.
 bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, InformacoesArquivo &poInfoArquivo)
 {

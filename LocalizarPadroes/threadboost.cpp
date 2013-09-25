@@ -44,10 +44,11 @@ void ThreadBoost::esperar(int milisegundos)
 
 void ThreadBoost::dormir()
 {
-    esperar(0);
+    boost::unique_lock<boost::mutex> bloqueio;
+    condicao.wait(bloqueio);
 }
 
 void ThreadBoost::acordar()
 {
-
+    condicao.notify_one();
 }
