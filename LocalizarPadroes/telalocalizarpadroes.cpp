@@ -255,9 +255,9 @@ void TelaLocalizarPadroes::on_finalizarBusca()
         tempoGasto /= 1000*60;
     }
 
-    statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivos com o padrão em %2") + lsTempo).
+    statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivo(s) com o padrão em %2") + lsTempo).
                              arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
-
+    habilitarPesquisa(true);
 }
 
 void TelaLocalizarPadroes::habilitadoExpressoesRegulares()

@@ -111,6 +111,7 @@ private:
     bool gbUsarNomeArquivoParaBusca;
     bool gbDistinguirMaiusculas;
     volatile bool gbPesquisando;
+    bool gbTerminado;
 
     bool existePadrao(const std::string &psCaminho, InformacoesArquivo &poInfoArquivo);
     inline long tamanhoArquivo(const std::string& psCaminho);

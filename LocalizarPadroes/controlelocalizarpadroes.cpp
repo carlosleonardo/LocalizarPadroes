@@ -7,6 +7,7 @@
 #include <iterator>
 #include <locale>
 #include <boost/array.hpp>
+#include <stack>
 
 using namespace boost;
 
@@ -31,62 +32,72 @@ ControleLocalizarPadroes::ControleLocalizarPadroes()
     gbUsarNomeArquivoParaBusca = false;
 
     gbPesquisando = true;
+    gbTerminado = false;
 }
 
-// Realiza busca recursiva pelo padrão a partir da pasta informada.
-// Este será executado como um thread
+// Realiza busca pelo padrão a partir da pasta informada.
+// Este será executado como um thread, usando o algoritmo de busca em profundidade
 bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicial)
 {
+    std::string nomeCaminho;
+    system::error_code erro;
+
     if (nomePastaInicial=="" || gsPadraoPesquisa == "") {
         return false;
     }
 
     try {
 
-        path loCaminho(nomePastaInicial);
-        std::string nomeCaminho;
-        system::error_code erro;
+        std::stack<std::string> pastasVisitadas;
 
-        // Recupera os subdiretórios e arquivos do diretório informado e faz uma busca em cada um deles
-        directory_iterator loIterador(loCaminho);
+        pastasVisitadas.push(nomePastaInicial);
 
-        while (loIterador != directory_iterator()) {
-            nomeCaminho = absolute(loIterador->path()).make_preferred().generic_string();
+        while (!pastasVisitadas.empty())
+        {
+            nomeCaminho.assign(pastasVisitadas.top());
+            pastasVisitadas.pop();
+            path loCaminho(nomeCaminho);
 
-            if (!estaPesquisando()) {
-                break;
-            }
+            // Recupera os subdiretórios e arquivos do diretório informado e faz uma busca em cada um deles
+            directory_iterator loIterador(loCaminho);
 
-            if (is_regular_file(loIterador->path(), erro )) {
+            while (loIterador != directory_iterator()) {
+                nomeCaminho = absolute(loIterador->path()).make_preferred().generic_string();
 
-                if (erro.value()==EACCES) {
-                    std::cerr << erro.message() << std::endl;
+                if (!estaPesquisando()) {
+                    break;
                 }
 
-                // Notifica que arquivo está sendo pesquisado, e se localizado, notifica isto também
-                // Caso tenha interrompido, cancela a pesquisa
-                InformacoesArquivo loInfoArquivo;
+                if (is_regular_file(loIterador->path(), erro )) {
 
-                loInfoArquivo.gsNomeArquivo = nomeCaminho;
-                if (!notificadorBusca.empty()) {
-                    notificadorBusca(loInfoArquivo);
-                }
+                    if (erro.value()==EACCES) {
+                        std::cerr << erro.message() << std::endl;
+                    }
 
-                if (existePadrao(nomeCaminho, loInfoArquivo)) {
-                    if (!notificadorLocalizado.empty()) {
-                        notificadorLocalizado(loInfoArquivo);
+                    // Notifica que arquivo está sendo pesquisado, e se localizado, notifica isto também
+                    InformacoesArquivo loInfoArquivo;
+
+                    loInfoArquivo.gsNomeArquivo = nomeCaminho;
+                    if (!notificadorBusca.empty()) {
+                        notificadorBusca(loInfoArquivo);
+                    }
+
+                    if (existePadrao(nomeCaminho, loInfoArquivo)) {
+                        if (!notificadorLocalizado.empty()) {
+                            notificadorLocalizado(loInfoArquivo);
+                        }
                     }
                 }
-            }
-            else if (is_directory(loIterador->path(), erro)) {
-                if (erro.value()==EACCES) {
-                    std::cerr << erro.message() << std::endl;
-                }
-                buscarArquivos(nomeCaminho);
-            }
-            loIterador++;
-        }
+                else if (is_directory(loIterador->path(), erro)) {
+                    if (erro.value()==EACCES) {
+                        std::cerr << erro.message() << std::endl;
+                    }
+                    pastasVisitadas.push(nomeCaminho);
 
+                }
+                loIterador++;
+            }
+        }
     }
     catch(filesystem_error& fe) {
         std::cerr << fe.what() << std::endl;
