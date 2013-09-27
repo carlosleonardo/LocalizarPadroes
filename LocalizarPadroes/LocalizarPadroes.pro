@@ -49,10 +49,7 @@ win32:g++:GCC_VERSION=48
 CONFIG += boost
 
 unix {
-
-    INCLUDEPATH += $$BOOST_INSTALL_DIR/boost-$${BOOST_VERSION_UNIX}/include
-    LIBS += -L$$BOOST_INSTALL_DIR/boost-$${BOOST_VERSION_UNIX}/lib -lboost_filesystem -lboost_regex -lboost_system
-    LIBS += -lboost_thread
+    LIBS += -lboost_filesystem -lboost_regex -lboost_system -lboost_thread
 }
 
 # Força o MSBuild a tratar wchar_t como tipo interno
