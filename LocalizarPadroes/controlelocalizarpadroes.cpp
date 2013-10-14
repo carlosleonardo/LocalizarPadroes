@@ -1,4 +1,5 @@
 #include "controlelocalizarpadroes.h"
+#include "util.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
@@ -20,8 +21,6 @@ using namespace boost::filesystem;
 #else
 using namespace boost::filesystem;
 #endif
-
-const unsigned BUFSIZE=512;
 
 ControleLocalizarPadroes::ControleLocalizarPadroes()
 {

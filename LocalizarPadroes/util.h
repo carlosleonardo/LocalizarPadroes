@@ -28,4 +28,6 @@ std::string toLower(const std::string &psOrigem);
   */
 bool arquivoTexto(const std::string& psArquivo);
 
+const int BUFSIZE=512;
+
 #endif // UTIL_H
