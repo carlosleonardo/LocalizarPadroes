@@ -6,7 +6,7 @@
 #include <boost/array.hpp>
 
 using namespace boost;
-const int BUFSIZE=4;
+const int BUFSIZE=512;
 
 std::string toUpper(const std::string& psOrigem)
 {
