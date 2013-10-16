@@ -42,6 +42,7 @@ PRECOMPILED_HEADER += stdcpp.h
 MOC_DIR = moc
 OBJECTS_DIR = objs
 UI_DIR = ui
+RC_FILE=localizarpadroes.rc
 
 #Suporte multi-plataforma
 
@@ -73,4 +74,8 @@ win32 {
 }
 
 OTHER_FILES += \
-    ResponsividadeGUI.txt
+    ResponsividadeGUI.txt \
+    localizarpadroes.rc \
+    Localizar.ico
+
+RESOURCES +=
