@@ -4,6 +4,7 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 #include <QTime>
 #include <boost/thread/thread.hpp>
 #include "telatestarexpressaoregular.h"
@@ -13,6 +14,8 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     ui(new Ui::TelaLocalizarPadroes)
 {
     ui->setupUi(this);
+
+    carregarConfiguracoes();
 
     // Usamos o modelo padrão que recebe strings, para usar na listview
     goModeloDados = new QStandardItemModel();
@@ -64,8 +67,33 @@ void TelaLocalizarPadroes::inicializarComponentes()
 
 TelaLocalizarPadroes::~TelaLocalizarPadroes()
 {
+    salvarConfiguracoes();
     delete ui;
     delete goModeloDados;
+}
+
+void TelaLocalizarPadroes::carregarConfiguracoes()
+{
+    QSettings config;
+
+    config.beginGroup("JanelaPrincipal");
+    resize(config.value("Tamanho", QSize(350,500)).toSize());
+    move(config.value("Posicao", QPoint(100,100)).toPoint());
+    ui->txtPastaInicial->setText(config.value("Pasta Inicial").toString());
+    ui->txtTextoBusca->setText(config.value("Padrão de busca").toString());
+    config.endGroup();
+}
+
+void TelaLocalizarPadroes::salvarConfiguracoes()
+{
+    QSettings config;
+
+    config.beginGroup("JanelaPrincipal");
+    config.setValue("Tamanho", size());
+    config.setValue("Posicao", pos());
+    config.setValue("Pasta Inicial", ui->txtPastaInicial->text());
+    config.setValue("Padrão de busca", ui->txtTextoBusca->text());
+    config.endGroup();
 }
 
 void TelaLocalizarPadroes::on_btnAlterarPasta_clicked()
