@@ -8,11 +8,12 @@
 #include "controlelocalizarpadroes.h"
 #include "adaptadorinterfacethread.h"
 
+#include <FabricaMenuContextoSistema.h>
+#include <ShellContextMenuWin.h>
+
 namespace Ui {
 class TelaLocalizarPadroes;
 }
-
-
 
 class TelaLocalizarPadroes : public QMainWindow
 {
@@ -25,6 +26,9 @@ public:
     void definirPadraoBusca(QString lsBusca);
 
     void executarThreadPesquisa(QString pasta);
+
+    void inicializaFabrica();
+    QString obterCaminhoItemSelecionado(const QPoint &pos);
 private slots:
      void on_btnAlterarPasta_clicked();
 
@@ -44,6 +48,7 @@ private slots:
 
      void on_finalizarBusca();
 
+     void contextMenuEvent(QContextMenuEvent *event);
 signals:
      void preencheLista(const InformacoesArquivo& infoArquivo);
      void pesquisarLista(const InformacoesArquivo& infoArquivo);
@@ -58,6 +63,10 @@ private:
     QPushButton* btnCancelar;
     boost::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
     QTime m_tempo;
+    FabricaMenuContextoSistema* fabrica;
+#ifdef _WIN32
+    ShellContextMenuWindows menuContexto;
+#endif
 
     // Eventos usados pela pesquisa de arquivos
     void delegarPreencherLista(const InformacoesArquivo& infoArquivo);

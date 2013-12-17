@@ -145,7 +145,11 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QTableView" name="lvwLocalizados"/>
+          <widget class="QTableView" name="lvwLocalizados">
+           <property name="contextMenuPolicy">
+            <enum>Qt::DefaultContextMenu</enum>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

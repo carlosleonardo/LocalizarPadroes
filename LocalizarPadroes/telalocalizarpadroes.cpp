@@ -6,8 +6,15 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QTime>
+#include <QDebug>
 #include <boost/thread/thread.hpp>
+
 #include "telatestarexpressaoregular.h"
+
+#ifdef WIN32
+#include <ShellContextMenuWin.h>
+#include <qevent.h>
+#endif
 
 TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     QMainWindow(parent),
@@ -41,6 +48,9 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
                      Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(finalizadaBusca()), SLOT(on_finalizarBusca()),Qt::QueuedConnection);
 
+    // Instancia a fabrica de menu de contexto
+    inicializaFabrica();
+
     inicializarComponentes();
 
 }
@@ -70,6 +80,7 @@ TelaLocalizarPadroes::~TelaLocalizarPadroes()
     salvarConfiguracoes();
     delete ui;
     delete goModeloDados;
+    //delete fabrica;
 }
 
 void TelaLocalizarPadroes::carregarConfiguracoes()
@@ -128,6 +139,12 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
     threadPesquisa.reset(new ExecutorBusca(f));
     threadPesquisa.get()->iniciar();
 
+}
+
+void TelaLocalizarPadroes::inicializaFabrica()
+{
+    fabrica = FabricaMenuContextoSistema::instanciar();
+    fabrica->registrarMenuContexto(menuContexto);
 }
 
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
@@ -296,4 +313,29 @@ void TelaLocalizarPadroes::habilitadoExpressoesRegulares()
     ui->chkConsiderarCaixaLetra->setEnabled(!lbExpressoesRegulares);
     ui->chkPalavraInteira->setEnabled(!lbExpressoesRegulares);
     ui->btnTestarExpressaoRegular->setEnabled(lbExpressoesRegulares);
+}
+
+void TelaLocalizarPadroes::contextMenuEvent(QContextMenuEvent *event)
+{
+    IMenuContextoSistema *localCriarMenuContexto = fabrica->criarMenuContexto(menuContexto.name());
+    Q_ASSERT(localCriarMenuContexto != nullptr);
+
+    QString caminhoSelecionado = obterCaminhoItemSelecionado(event->pos());
+
+    Window w;
+    w.handle = (HWND)effectiveWinId();
+
+    localCriarMenuContexto->showContextMenuFor(caminhoSelecionado.toStdWString(), event->globalX(), event->globalY(), w );
+    delete localCriarMenuContexto;
+}
+
+/**
+ * @brief Recupera o caminho de arquivo selecionado
+ * @return
+ */
+QString TelaLocalizarPadroes::obterCaminhoItemSelecionado(const QPoint& pos)
+{
+    QModelIndex indItem = ui->lvwLocalizados->indexAt(pos);
+    qDebug()<< indItem.data().toString() << "(" << indItem.row() << ", " << indItem.column() << ")";
+    return indItem.data().toString();
 }
