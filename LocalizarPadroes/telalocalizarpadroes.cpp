@@ -49,7 +49,9 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     QObject::connect(this, SIGNAL(finalizadaBusca()), SLOT(on_finalizarBusca()),Qt::QueuedConnection);
 
     // Instancia a fabrica de menu de contexto
+#ifdef _WIN32
     inicializaFabrica();
+#endif
 
     inicializarComponentes();
 
@@ -141,11 +143,13 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 
 }
 
+#ifdef _WIN32
 void TelaLocalizarPadroes::inicializaFabrica()
 {
     fabrica = FabricaMenuContextoSistema::instanciar();
     fabrica->registrarMenuContexto(menuContexto);
 }
+#endif
 
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
 {
@@ -315,6 +319,7 @@ void TelaLocalizarPadroes::habilitadoExpressoesRegulares()
     ui->btnTestarExpressaoRegular->setEnabled(lbExpressoesRegulares);
 }
 
+#ifdef _WIN32
 void TelaLocalizarPadroes::contextMenuEvent(QContextMenuEvent *event)
 {
     IMenuContextoSistema *localCriarMenuContexto = fabrica->criarMenuContexto(menuContexto.name());
@@ -328,6 +333,7 @@ void TelaLocalizarPadroes::contextMenuEvent(QContextMenuEvent *event)
     localCriarMenuContexto->showContextMenuFor(caminhoSelecionado.toStdWString(), event->globalX(), event->globalY(), w );
     delete localCriarMenuContexto;
 }
+#endif
 
 /**
  * @brief Recupera o caminho de arquivo selecionado

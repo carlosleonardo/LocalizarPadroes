@@ -82,5 +82,5 @@ RESOURCES +=
 
 win32: LIBS += -L$$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/Debug/" -lMenuContextoSistema
 
-INCLUDEPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
-DEPENDPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
+win32: INCLUDEPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
+win32: DEPENDPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
