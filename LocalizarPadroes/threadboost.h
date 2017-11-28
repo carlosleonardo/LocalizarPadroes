@@ -3,7 +3,10 @@
 
 #include "adaptadorinterfacethread.h"
 
-#include <boost/thread.hpp>
+#include <thread>
+#include <memory>
+#include <condition_variable>
+#include <mutex>
 
 /**
  * @brief The ThreadBoost class
@@ -22,9 +25,9 @@ public:
     AdaptadorInterfaceThread *obterInstancia();
 
 private:
-    boost::mutex meuMutex;
-    boost::shared_ptr<boost::thread> subprocesso;
-    boost::condition_variable condicao;
+    std::mutex meuMutex;
+    std::shared_ptr<std::thread> subprocesso;
+    std::condition_variable condicao;
 
 protected:
     void bloquear();

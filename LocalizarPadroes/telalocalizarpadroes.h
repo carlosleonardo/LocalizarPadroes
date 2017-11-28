@@ -8,9 +8,19 @@
 #include "controlelocalizarpadroes.h"
 #include "adaptadorinterfacethread.h"
 
-#ifdef _WIN32
+#if _MSC_VER > 1600
+#include <memory>
+using namespace std;
+#else
+#include <boost/shared_array.hpp>
+using namespace boost;
+#endif
+
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
 #include <FabricaMenuContextoSistema.h>
 #include <ShellContextMenuWin.h>
+#endif
 #endif
 
 namespace Ui {
@@ -28,9 +38,15 @@ public:
     void definirPadraoBusca(QString lsBusca);
 
     void executarThreadPesquisa(QString pasta);
-
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
     void inicializaFabrica();
+#endif
+#endif
     QString obterCaminhoItemSelecionado(const QPoint &pos);
+
+
+
 private slots:
      void on_btnAlterarPasta_clicked();
 
@@ -49,8 +65,10 @@ private slots:
      void on_pesquisarLista(const InformacoesArquivo& infoArquivo);
 
      void on_finalizarBusca();
-#ifdef _WIN32
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
      void contextMenuEvent(QContextMenuEvent *event);
+#endif
 #endif
 signals:
      void preencheLista(const InformacoesArquivo& infoArquivo);
@@ -64,12 +82,14 @@ private:
     QStandardItemModel* goModeloDados;
     bool gbCancelar;
     QPushButton* btnCancelar;
-    boost::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
+    shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
     QTime m_tempo;
-#ifdef _WIN32
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
     FabricaMenuContextoSistema* fabrica;
 
     ShellContextMenuWindows menuContexto;
+#endif
 #endif
 
     // Eventos usados pela pesquisa de arquivos

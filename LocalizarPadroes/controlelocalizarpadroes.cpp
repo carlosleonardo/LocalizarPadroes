@@ -1,16 +1,19 @@
 #include "controlelocalizarpadroes.h"
 #include "util.h"
 
+#include <boost/array.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/regex.hpp>
-#include <boost/thread.hpp>
+#include <regex>
+#include <thread>
 #include <fstream>
 #include <iterator>
 #include <locale>
-#include <boost/array.hpp>
 #include <stack>
+#include <iostream>
 
 using namespace boost;
+
+using namespace std;
 
 #if BOOST_VERSION < 105400
 #if BOOST_FILESYSTEM_VERSION == 3
@@ -164,7 +167,7 @@ bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, Inform
         lsPadraoPesquisa = gsPadraoPesquisa;
     }
 
-    unsigned lnPosicao;
+    size_t lnPosicao;
     regex loExpr;
 
     //if (!gbUsarExpressoesRegulares) {

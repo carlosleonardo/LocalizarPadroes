@@ -47,6 +47,8 @@ RC_FILE=localizarpadroes.rc
 #Suporte multi-plataforma
 
 win32:g++:GCC_VERSION=48
+BOOST_VERSION=1_65_1
+BOOST_ROOT=C:\local
 CONFIG += boost
 
 unix {
@@ -63,7 +65,7 @@ win32 {
     }
     win32-msvc2010:QMAKE_CXXFLAGS += $$MSVC_FLAG_QT -D_SCL_SECURE_NO_WARNINGS
     win32-msvc2012:QMAKE_CXXFLAGS += -D_SCL_SECURE_NO_WARNINGS
-    INCLUDEPATH += $$BOOST_ROOT/boost_$$BOOST_VERSION/include # Necessário para o QtCreator achar os includes
+    INCLUDEPATH += $$BOOST_ROOT/boost_$$BOOST_VERSION # Necessário para o QtCreator achar os includes
 
 #Exceto o gcc, os demais compiladores windows usam auto link. Não é preciso especificar as bibliotecas
     g++:LIBS += \
@@ -80,7 +82,7 @@ OTHER_FILES += \
 
 RESOURCES +=
 
-win32: LIBS += -L$$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/Debug/" -lMenuContextoSistema
+#win32: LIBS += -L$$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/Debug/" -lMenuContextoSistema
 
-win32: INCLUDEPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
-win32: DEPENDPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
+#win32: INCLUDEPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
+#win32: DEPENDPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"

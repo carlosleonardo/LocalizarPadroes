@@ -1,12 +1,16 @@
 #include "threadboost.h"
 
+#include <chrono>
+
+using namespace std;
+
 ThreadBoost::ThreadBoost():AdaptadorInterfaceThread()
 {
 }
 
 void ThreadBoost::iniciar()
 {
-    subprocesso.reset(new boost::thread(boost::bind(&ThreadBoost::executar, this)));
+    subprocesso.reset(new thread(bind(&ThreadBoost::executar, this)));
 }
 
 void ThreadBoost::bloquear()
@@ -26,25 +30,25 @@ AdaptadorInterfaceThread *ThreadBoost::obterInstancia()
 
 void ThreadBoost::concederTempo()
 {
-    boost::this_thread::yield();
+    this_thread::yield();
 }
 
 
 void ThreadBoost::juntar()
 {
-    boost::thread* meuThread = subprocesso.get();
+    thread* meuThread = subprocesso.get();
 
     meuThread->join();
 }
 
 void ThreadBoost::esperar(int milisegundos)
 {
-    boost::this_thread::sleep_for(boost::chrono::milliseconds(milisegundos));
+    this_thread::sleep_for(chrono::milliseconds(milisegundos));
 }
 
 void ThreadBoost::dormir()
 {
-    boost::unique_lock<boost::mutex> bloqueio;
+    unique_lock<mutex> bloqueio;
     condicao.wait(bloqueio);
 }
 

@@ -12,8 +12,10 @@
 #include "telatestarexpressaoregular.h"
 
 #ifdef WIN32
+#ifdef WIN32_USE_SHELL
 #include <ShellContextMenuWin.h>
 #include <qevent.h>
+#endif
 #endif
 
 TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
@@ -49,8 +51,10 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     QObject::connect(this, SIGNAL(finalizadaBusca()), SLOT(on_finalizarBusca()),Qt::QueuedConnection);
 
     // Instancia a fabrica de menu de contexto
-#ifdef _WIN32
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
     inicializaFabrica();
+#endif
 #endif
 
     inicializarComponentes();
@@ -143,12 +147,14 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 
 }
 
-#ifdef _WIN32
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
 void TelaLocalizarPadroes::inicializaFabrica()
 {
     fabrica = FabricaMenuContextoSistema::instanciar();
     fabrica->registrarMenuContexto(menuContexto);
 }
+#endif
 #endif
 
 void TelaLocalizarPadroes::on_btnProcurar_clicked()
@@ -319,7 +325,8 @@ void TelaLocalizarPadroes::habilitadoExpressoesRegulares()
     ui->btnTestarExpressaoRegular->setEnabled(lbExpressoesRegulares);
 }
 
-#ifdef _WIN32
+#ifdef WIN32
+#ifdef WIN32_USE_SHELL
 void TelaLocalizarPadroes::contextMenuEvent(QContextMenuEvent *event)
 {
     IMenuContextoSistema *localCriarMenuContexto = fabrica->criarMenuContexto(menuContexto.name());
@@ -333,6 +340,7 @@ void TelaLocalizarPadroes::contextMenuEvent(QContextMenuEvent *event)
     localCriarMenuContexto->showContextMenuFor(caminhoSelecionado.toStdWString(), event->globalX(), event->globalY(), w );
     delete localCriarMenuContexto;
 }
+#endif
 #endif
 
 /**
