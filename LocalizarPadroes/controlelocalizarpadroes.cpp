@@ -129,6 +129,9 @@ bool ControleLocalizarPadroes::estaPesquisando()
 void ControleLocalizarPadroes::cancelarPesquisa()
 {
     gbPesquisando = false;
+    if (!notificadorFinalizado.empty()) {
+        notificadorFinalizado();
+    }
 }
 
 void ControleLocalizarPadroes::inicializarPesquisa()

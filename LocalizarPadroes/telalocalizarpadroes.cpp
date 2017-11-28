@@ -87,6 +87,11 @@ TelaLocalizarPadroes::~TelaLocalizarPadroes()
     delete ui;
     delete goModeloDados;
     //delete fabrica;
+
+    // Se o thread de pesquisa está ativo, aguarda seu término
+    if (threadPesquisa != nullptr) {
+        threadPesquisa.get()->juntar();
+    }
 }
 
 void TelaLocalizarPadroes::carregarConfiguracoes()
@@ -142,6 +147,9 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
     f = boost::bind(&ControleLocalizarPadroes::buscarArquivos,
                     &goLocalizarPadroes, pasta.toStdString());
 #endif
+    // Verificamos se o thread ainda está rodando. Se for o caso, espera sua conclusão
+    if (threadPesquisa != nullptr)
+        threadPesquisa.get()->juntar();
     threadPesquisa.reset(new ExecutorBusca(f));
     threadPesquisa.get()->iniciar();
 
