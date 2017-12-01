@@ -7,7 +7,7 @@
 #include <QSettings>
 #include <QTime>
 #include <QDebug>
-#include <boost/thread/thread.hpp>
+#include <thread>
 
 #include "telatestarexpressaoregular.h"
 
@@ -36,11 +36,11 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     // Como o sinal tem um parâmetro, precisamos indicá-lo através do argumento boost _1
     // Nos delegates, emitimos um signal Qt
     goLocalizarPadroes.notificadorLocalizado.connect(
-                boost::bind(&TelaLocalizarPadroes::delegarPreencherLista, this, _1));
+                bind(&TelaLocalizarPadroes::delegarPreencherLista, this, _1));
     goLocalizarPadroes.notificadorBusca.connect(
-                boost::bind(&TelaLocalizarPadroes::delegarPesquisarLista, this, _1));
+                bind(&TelaLocalizarPadroes::delegarPesquisarLista, this, _1));
     goLocalizarPadroes.notificadorFinalizado.connect(
-                boost::bind(&TelaLocalizarPadroes::delegarFinalizado, this));
+                bind(&TelaLocalizarPadroes::delegarFinalizado, this));
 
     // Vinculamos os signals personalizados e slots de forma enfileirada.
     qRegisterMetaType<InformacoesArquivo>("InformacoesArquivo");
@@ -140,13 +140,9 @@ void TelaLocalizarPadroes::executarThreadPesquisa(QString pasta)
 {
     ExecutorBusca::Funcao f;
 
-#if _MSC_VER > 1600
+
     f = std::bind(&ControleLocalizarPadroes::buscarArquivos,
                                         &goLocalizarPadroes, pasta.toStdString());
-#else
-    f = boost::bind(&ControleLocalizarPadroes::buscarArquivos,
-                    &goLocalizarPadroes, pasta.toStdString());
-#endif
     // Verificamos se o thread ainda está rodando. Se for o caso, espera sua conclusão
     if (threadPesquisa != nullptr)
         threadPesquisa.get()->juntar();
