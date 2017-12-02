@@ -357,3 +357,13 @@ QString TelaLocalizarPadroes::obterCaminhoItemSelecionado(const QPoint& pos)
     qDebug()<< indItem.data().toString() << "(" << indItem.row() << ", " << indItem.column() << ")";
     return indItem.data().toString();
 }
+
+void TelaLocalizarPadroes::on_chkPalavraInteira_toggled(bool checked)
+{
+    goLocalizarPadroes.setPalavraInteira(checked);
+}
+
+void TelaLocalizarPadroes::on_chkUsarNomeArquivoComoPadrao_toggled(bool checked)
+{
+    goLocalizarPadroes.setNomeArquivoParaBusca(checked);
+}

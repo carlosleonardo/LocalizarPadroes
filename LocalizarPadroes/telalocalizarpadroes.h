@@ -70,6 +70,10 @@ private slots:
      void contextMenuEvent(QContextMenuEvent *event);
 #endif
 #endif
+     void on_chkPalavraInteira_toggled(bool checked);
+
+     void on_chkUsarNomeArquivoComoPadrao_toggled(bool checked);
+
 signals:
      void preencheLista(const InformacoesArquivo& infoArquivo);
      void pesquisarLista(const InformacoesArquivo& infoArquivo);
