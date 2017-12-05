@@ -1,7 +1,7 @@
 #include "controlelocalizarpadroes.h"
 #include "util.h"
 
-#include <boost/array.hpp>
+#include <array>
 #include <boost/filesystem.hpp>
 #include <regex>
 #include <thread>
@@ -54,6 +54,8 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
 
         pastasVisitadas.push(nomePastaInicial);
 
+        InformacoesArquivo loInfoArquivo;
+
         while (!pastasVisitadas.empty())
         {
             nomeCaminho.assign(pastasVisitadas.top());
@@ -77,8 +79,6 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
                     }
 
                     // Notifica que arquivo está sendo pesquisado, e se localizado, notifica isto também
-                    InformacoesArquivo loInfoArquivo;
-
                     loInfoArquivo.gsNomeArquivo = nomeCaminho;
                     if (!notificadorBusca.empty()) {
                         notificadorBusca(loInfoArquivo);
@@ -94,6 +94,7 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
                     if (erro.value()==EACCES) {
                         std::cerr << erro.message() << std::endl;
                     }
+
                     pastasVisitadas.push(nomeCaminho);
 
                 }
@@ -143,7 +144,7 @@ void ControleLocalizarPadroes::inicializarPesquisa()
 bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, InformacoesArquivo &poInfoArquivo)
 {
     std::fstream loArquivo;
-    boost::array<char, BUFSIZE> buffer;
+    array<char, BUFSIZE> buffer;
     std::ostringstream loStreamString;
     int lnTotal=0;
 
@@ -156,8 +157,8 @@ bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, Inform
     loArquivo.open(psCaminho.c_str());
 
     while (loArquivo) {
-        loArquivo.read(buffer.c_array(), BUFSIZE);
-        loStreamString << buffer.c_array();
+        loArquivo.read(buffer.data(), BUFSIZE);
+        loStreamString << buffer.data();
     }
     std::string lsConteudo = loStreamString.str();
     std::string lsPadraoPesquisa;
@@ -173,11 +174,11 @@ bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, Inform
     size_t lnPosicao;
     regex loExpr;
 
-    //if (!gbUsarExpressoesRegulares) {
+    if (!gbUsarExpressoesRegulares) {
         lnPosicao = lsConteudo.find(lsPadraoPesquisa);
-    //} else {
+    } else {
 
-    //}
+    }
 
     while (lnPosicao != std::string::npos) {
         lnTotal ++;

@@ -3,9 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include <exception>
-#include <boost/array.hpp>
+#include <array>
+#include <cassert>
 
-using namespace boost;
+using namespace std;
 
 std::string toUpper(const std::string& psOrigem)
 {
@@ -33,7 +34,7 @@ std::string toLower(const std::string &psOrigem)
  */
 bool decodifica(const char* buf, size_t tamanho)
 {
-    assert(buf != 0);
+    assert(buf != nullptr);
     int codigo = buf[0];
 
     // Extrai bytes mais significativos e menos significativos
@@ -58,9 +59,9 @@ bool arquivoTexto(const std::string& psArquivo)
             1 - Mime types
             2 - Código mágico utilizando assinaturas conhecidas
         */
-        loArquivo.read(buffer.c_array(), buffer.size());
+        loArquivo.read(buffer.data(), buffer.size());
 
-        if (!decodifica(buffer.c_array(), buffer.size())) {
+        if (!decodifica(buffer.data(), buffer.size())) {
             return false;
         }
     }
