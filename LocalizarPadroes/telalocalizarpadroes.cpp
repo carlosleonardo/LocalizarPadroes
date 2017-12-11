@@ -293,7 +293,7 @@ void TelaLocalizarPadroes::on_preencherLista(const InformacoesArquivo &infoArqui
 
 void TelaLocalizarPadroes::on_pesquisarLista(const InformacoesArquivo &infoArquivo)
 {
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
 }
 
 void TelaLocalizarPadroes::on_finalizarBusca()
