@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LocalizarPadroes
 TEMPLATE = app
-CONFIG += precompile_header c++11
+CONFIG += precompile_header c++14
 
 SOURCES += main.cpp\
     controlelocalizarpadroes.cpp \
