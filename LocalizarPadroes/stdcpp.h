@@ -7,6 +7,6 @@
 #include <QModelIndexList>
 #include <QPushButton>
 
-#include <boost/version.hpp>
+
 
 #endif // STDCPP_H

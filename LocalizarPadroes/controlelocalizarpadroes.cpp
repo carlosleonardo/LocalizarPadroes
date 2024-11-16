@@ -2,7 +2,7 @@
 #include "util.h"
 
 #include <array>
-#include <boost/filesystem.hpp>
+
 #include <regex>
 #include <thread>
 #include <fstream>
@@ -10,20 +10,12 @@
 #include <locale>
 #include <stack>
 #include <iostream>
+#include <filesystem>
 
-using namespace boost;
 
 using namespace std;
 
-#if BOOST_VERSION < 105400
-#if BOOST_FILESYSTEM_VERSION == 3
-using namespace boost::filesystem3;
-#elif BOOST_FILESYSTEM_VERSION == 2
-using namespace boost::filesystem;
-#endif
-#else
-using namespace boost::filesystem;
-#endif
+
 
 ControleLocalizarPadroes::ControleLocalizarPadroes()
 {
@@ -42,7 +34,7 @@ ControleLocalizarPadroes::ControleLocalizarPadroes()
 bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicial)
 {
     std::string nomeCaminho;
-    system::error_code erro;
+    std::error_code erro;
 
     if (nomePastaInicial=="" || gsPadraoPesquisa == "") {
         return false;
@@ -60,19 +52,19 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
         {
             nomeCaminho.assign(pastasVisitadas.top());
             pastasVisitadas.pop();
-            path loCaminho(nomeCaminho);
+            filesystem::path loCaminho(nomeCaminho);
 
             // Recupera os subdiretórios e arquivos do diretório informado e faz uma busca em cada um deles
-            directory_iterator loIterador(loCaminho);
+            filesystem::directory_iterator loIterador(loCaminho);
 
-            while (loIterador != directory_iterator()) {
-                nomeCaminho = absolute(loIterador->path()).make_preferred().generic_string();
+            while (loIterador != filesystem::directory_iterator()) {
+                nomeCaminho = filesystem::absolute(loIterador->path()).make_preferred().generic_string();
 
                 if (!estaPesquisando()) {
                     break;
                 }
 
-                if (is_regular_file(loIterador->path(), erro )) {
+                if (filesystem::is_regular_file(loIterador->path(), erro )) {
 
                     if (erro.value()==EACCES) {
                         std::cerr << erro.message() << std::endl;
@@ -80,17 +72,17 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
 
                     // Notifica que arquivo está sendo pesquisado, e se localizado, notifica isto também
                     loInfoArquivo.gsNomeArquivo = nomeCaminho;
-                    if (!notificadorBusca.empty()) {
+                    /*if (!notificadorBusca.empty()) {
                         notificadorBusca(loInfoArquivo);
-                    }
+                    }*/
 
                     if (existePadrao(nomeCaminho, loInfoArquivo)) {
-                        if (!notificadorLocalizado.empty()) {
+                        /*if (!notificadorLocalizado.empty()) {
                             notificadorLocalizado(loInfoArquivo);
-                        }
+                        }*/
                     }
                 }
-                else if (is_directory(loIterador->path(), erro)) {
+                else if (filesystem::is_directory(loIterador->path(), erro)) {
                     if (erro.value()==EACCES) {
                         std::cerr << erro.message() << std::endl;
                     }
@@ -102,13 +94,13 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
             }
         }
     }
-    catch(filesystem_error& fe) {
+    catch(filesystem::filesystem_error& fe) {
         std::cerr << fe.what() << std::endl;
     }
 
-    if (!notificadorFinalizado.empty()) {
+    /*if (!notificadorFinalizado.empty()) {
         notificadorFinalizado();
-    }
+    }*/
     return true;
 }
 
@@ -130,9 +122,9 @@ bool ControleLocalizarPadroes::estaPesquisando()
 void ControleLocalizarPadroes::cancelarPesquisa()
 {
     gbPesquisando = false;
-    if (!notificadorFinalizado.empty()) {
+    /*if (!notificadorFinalizado.empty()) {
         notificadorFinalizado();
-    }
+    }*/
 }
 
 void ControleLocalizarPadroes::inicializarPesquisa()
@@ -196,7 +188,7 @@ bool ControleLocalizarPadroes::existePadrao(const std::string& psCaminho, Inform
 
 long ControleLocalizarPadroes::tamanhoArquivo(const std::string& psCaminho)
 {
-    return file_size(path(psCaminho));
+    return filesystem::file_size(filesystem::path(psCaminho));
 }
 
 void ControleLocalizarPadroes::validarOpcoesBusca()

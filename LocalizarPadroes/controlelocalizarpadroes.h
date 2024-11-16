@@ -8,8 +8,7 @@
 
 #include <vector>
 #ifndef Q_MOC_RUN
-#include <boost/signals2/signal.hpp>
-#include <boost/thread/mutex.hpp>
+
 #endif
 
 /**
@@ -22,9 +21,9 @@ class ControleLocalizarPadroes
 public:
 
     // --------------------------------- Eventos ------------------------------------------------------ //
-    typedef boost::signals2::signal <void (const InformacoesArquivo& infoArquivo)> NotificadorPesquisando;
+    /*typedef boost::signals2::signal <void (const InformacoesArquivo& infoArquivo)> NotificadorPesquisando;
     typedef boost::signals2::signal <void (const InformacoesArquivo& infoArquivo)> NotificadorLocalizado;
-    typedef boost::signals2::signal <void ()> NotificadorFinalizado;
+    typedef boost::signals2::signal <void ()> NotificadorFinalizado;*/
 
     // ---------------------------------- Construtores ------------------------------------------------
     ControleLocalizarPadroes();
@@ -51,21 +50,21 @@ public:
      *
      *  @author Leonardo
      */
-    NotificadorPesquisando notificadorBusca;
+    //NotificadorPesquisando notificadorBusca;
 
     /**
      * @brief notificadorLocalizado
      *
      * @author Leonardo
      */
-    NotificadorLocalizado notificadorLocalizado;
+    //NotificadorLocalizado notificadorLocalizado;
 
     /**
      * @brief notificadorFinalizado
      *
      * @author Leonardo
      */
-    NotificadorFinalizado notificadorFinalizado;
+    //NotificadorFinalizado notificadorFinalizado;
 
     inline void setNomeArquivoParaBusca(bool pbHabilitado) {
         gbUsarNomeArquivoParaBusca = pbHabilitado;

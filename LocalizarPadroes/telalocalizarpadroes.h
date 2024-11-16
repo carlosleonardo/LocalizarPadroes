@@ -12,14 +12,13 @@
 #include <memory>
 using namespace std;
 #else
-#include <boost/shared_array.hpp>
-using namespace boost;
+
+
 #endif
 
 #ifdef WIN32
 #ifdef WIN32_USE_SHELL
-#include <FabricaMenuContextoSistema.h>
-#include <ShellContextMenuWin.h>
+
 #endif
 #endif
 
@@ -86,13 +85,11 @@ private:
     QStandardItemModel* goModeloDados;
     bool gbCancelar;
     QPushButton* btnCancelar;
-    shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
+    std::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
     QTime m_tempo;
 #ifdef WIN32
 #ifdef WIN32_USE_SHELL
-    FabricaMenuContextoSistema* fabrica;
 
-    ShellContextMenuWindows menuContexto;
 #endif
 #endif
 
