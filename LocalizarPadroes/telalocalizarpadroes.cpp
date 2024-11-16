@@ -51,13 +51,7 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
                      Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(finalizadaBusca()), SLOT(on_finalizarBusca()),Qt::QueuedConnection);
 
-    // Instancia a fabrica de menu de contexto
-#ifdef WIN32
-#ifdef WIN32_USE_SHELL
-    inicializaFabrica();
-#endif
-#endif
-
+    // Instancia os componentes
     inicializarComponentes();
 
 }
@@ -191,11 +185,11 @@ void TelaLocalizarPadroes::on_btnProcurar_clicked()
     statusBar()->showMessage("Procurando...");
 
     QStringList loListaCabecalho;
-    //loListaCabecalho << "Nome" << trUtf8("Ocorrências") << "Local";
+    loListaCabecalho << "Nome" << tr("Ocorrências") << "Local";
     goModeloDados->setHorizontalHeaderLabels(loListaCabecalho);
     ui->lvwLocalizados->horizontalHeader()->setVisible(true);
 
-    //m_tempo.start();
+    m_tempo.start();
 
     definirPadraoBusca(lsBusca);
     goLocalizarPadroes.inicializarPesquisa();

@@ -72,14 +72,14 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
 
                     // Notifica que arquivo está sendo pesquisado, e se localizado, notifica isto também
                     loInfoArquivo.gsNomeArquivo = nomeCaminho;
-                    /*if (!notificadorBusca.empty()) {
+                    if (!notificadorBusca.empty()) {
                         notificadorBusca(loInfoArquivo);
-                    }*/
+                    }
 
                     if (existePadrao(nomeCaminho, loInfoArquivo)) {
-                        /*if (!notificadorLocalizado.empty()) {
+                        if (!notificadorLocalizado.empty()) {
                             notificadorLocalizado(loInfoArquivo);
-                        }*/
+                        }
                     }
                 }
                 else if (filesystem::is_directory(loIterador->path(), erro)) {
@@ -98,9 +98,9 @@ bool ControleLocalizarPadroes::buscarArquivos(const std::string& nomePastaInicia
         std::cerr << fe.what() << std::endl;
     }
 
-    /*if (!notificadorFinalizado.empty()) {
+    if (!notificadorFinalizado.empty()) {
         notificadorFinalizado();
-    }*/
+    }
     return true;
 }
 
@@ -122,9 +122,9 @@ bool ControleLocalizarPadroes::estaPesquisando()
 void ControleLocalizarPadroes::cancelarPesquisa()
 {
     gbPesquisando = false;
-    /*if (!notificadorFinalizado.empty()) {
+    if (!notificadorFinalizado.empty()) {
         notificadorFinalizado();
-    }*/
+    }
 }
 
 void ControleLocalizarPadroes::inicializarPesquisa()
