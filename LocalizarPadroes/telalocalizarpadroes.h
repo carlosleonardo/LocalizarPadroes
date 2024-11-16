@@ -2,7 +2,7 @@
 #define TELALOCALIZARPADROES_H
 
 #include <QMainWindow>
-#include <QTime>
+#include <QElapsedTimer>
 
 #include "stdcpp.h"
 #include "controlelocalizarpadroes.h"
@@ -86,7 +86,7 @@ private:
     bool gbCancelar;
     QPushButton* btnCancelar;
     std::shared_ptr<AdaptadorInterfaceThread> threadPesquisa;
-    QTime m_tempo;
+    QElapsedTimer m_tempo;
 #ifdef WIN32
 #ifdef WIN32_USE_SHELL
 

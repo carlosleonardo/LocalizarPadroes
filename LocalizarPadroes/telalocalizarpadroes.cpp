@@ -8,6 +8,7 @@
 #include <QTime>
 #include <QDebug>
 #include <thread>
+#include <boost/bind.hpp>
 
 #include "telatestarexpressaoregular.h"
 
@@ -35,12 +36,12 @@ TelaLocalizarPadroes::TelaLocalizarPadroes(QWidget *parent) :
     // Conectamos o slot ao sinal boost da nossa classe controle de MVC
     // Como o sinal tem um parâmetro, precisamos indicá-lo através do argumento boost _1
     // Nos delegates, emitimos um signal Qt
-    /*goLocalizarPadroes.notificadorLocalizado.connect(
-                bind(&TelaLocalizarPadroes::delegarPreencherLista, this, _1));
+    goLocalizarPadroes.notificadorLocalizado.connect(
+                boost::bind(&TelaLocalizarPadroes::delegarPreencherLista, this, _1));
     goLocalizarPadroes.notificadorBusca.connect(
-                bind(&TelaLocalizarPadroes::delegarPesquisarLista, this, _1));
+                boost::bind(&TelaLocalizarPadroes::delegarPesquisarLista, this,_1));
     goLocalizarPadroes.notificadorFinalizado.connect(
-                bind(&TelaLocalizarPadroes::delegarFinalizado, this));*/
+                boost::bind(&TelaLocalizarPadroes::delegarFinalizado, this));
 
     // Vinculamos os signals personalizados e slots de forma enfileirada.
     qRegisterMetaType<InformacoesArquivo>("InformacoesArquivo");
@@ -296,11 +297,11 @@ void TelaLocalizarPadroes::on_finalizarBusca()
 {
     QApplication::restoreOverrideCursor();
 
-    //float tempoGasto = m_tempo.elapsed();
+    float tempoGasto = m_tempo.elapsed();
     QString lsTempo;
 
     //qDebug("%f", tempoGasto);
-    /*if (tempoGasto < 1000) {
+    if (tempoGasto < 1000) {
         lsTempo = " millisegundos";
     } else if (tempoGasto >= 1000 && tempoGasto <= 1000*60) {
         lsTempo = "segundo(s)";
@@ -308,10 +309,10 @@ void TelaLocalizarPadroes::on_finalizarBusca()
     } else if (tempoGasto > 1000*60 && tempoGasto <= 1000*60*60) {
         lsTempo = "minuto(s)";
         tempoGasto /= 1000*60;
-    }*/
+    }
 
-    //statusBar()->showMessage(QString(trUtf8("Localizado(s) %1 arquivo(s) com o padrão em %2") + lsTempo).
-    //                         arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
+    statusBar()->showMessage(QString(tr("Localizado(s) %1 arquivo(s) com o padrão em %2") + lsTempo).
+                             arg(goModeloDados->rowCount()).arg(tempoGasto, 3, 'f', 2));
     habilitarPesquisa(true);
 }
 

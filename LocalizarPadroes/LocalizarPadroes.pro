@@ -46,14 +46,10 @@ RC_FILE=localizarpadroes.rc
 
 #Suporte multi-plataforma
 
-win32:g++:GCC_VERSION=48
-BOOST_VERSION=1_65_1
-BOOST_ROOT=C:\local
-CONFIG += boost
+VCPKG_ROOT=$$getenv("VCPKG_ROOT")
+INCLUDEPATH += $$VCPKG_ROOT/installed/x64-windows/include
+LIBS += -L$$VCPKG_ROOT/installed/x64-windows/lib
 
-unix {
-    LIBS += -lboost_filesystem -lboost_regex -lboost_system -lboost_thread
-}
 
 # Força o MSBuild a tratar wchar_t como tipo interno
 # para não dar erros de linkedição em boost::filesystem3
@@ -79,10 +75,3 @@ OTHER_FILES += \
     ResponsividadeGUI.txt \
     localizarpadroes.rc \
     Localizar.ico
-
-RESOURCES +=
-
-#win32: LIBS += -L$$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/Debug/" -lMenuContextoSistema
-
-#win32: INCLUDEPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
-#win32: DEPENDPATH += $$PWD"/../../../Visual Studio 2012/Projects/COMTest/COMTest/MenuContextoSistema"
