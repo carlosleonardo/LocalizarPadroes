@@ -45,10 +45,15 @@ UI_DIR = ui
 RC_FILE=localizarpadroes.rc
 
 #Suporte multi-plataforma
-
+win32 {
+    SUFIXO=windows
+}
+linux {
+    SUFIXO=linux
+}
 VCPKG_ROOT=$$getenv("VCPKG_ROOT")
-INCLUDEPATH += $$VCPKG_ROOT/installed/x64-windows/include
-LIBS += -L$$VCPKG_ROOT/installed/x64-windows/lib
+INCLUDEPATH += $$VCPKG_ROOT/installed/x64-$$SUFIXO/include
+LIBS += -L$$VCPKG_ROOT/installed/x64-$$SUFIXO/lib
 
 
 # Força o MSBuild a tratar wchar_t como tipo interno
