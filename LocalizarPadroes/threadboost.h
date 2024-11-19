@@ -20,9 +20,9 @@ public:
 
     // AdaptadorInterfaceThread interface
 public:
-    void iniciar();
-    void concederTempo();
-    AdaptadorInterfaceThread *obterInstancia();
+    void iniciar() override;
+    void concederTempo() override;
+    AdaptadorInterfaceThread *obterInstancia() override;
 
 private:
     std::mutex meuMutex;
@@ -30,16 +30,16 @@ private:
     std::condition_variable condicao;
 
 protected:
-    void bloquear();
-    void desbloquear();
-    virtual void executar()=0;
+    void bloquear() override;
+    void desbloquear() override;
+    virtual void executar() = 0;
 
     // AdaptadorInterfaceThread interface
 public:
-    void juntar();
-    void esperar(int milisegundos);
-    void dormir();
-    void acordar();
+    void juntar() override;
+    void esperar(int milisegundos) override;
+    void dormir() override;
+    void acordar() override;
 };
 
 #endif // THREADBOOST_H

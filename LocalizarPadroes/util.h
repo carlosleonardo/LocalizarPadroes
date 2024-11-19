@@ -26,8 +26,8 @@ std::string toLower(const std::string &psOrigem);
 
   @param    psArquivo   Caminho completo do arquivo
   */
-bool arquivoTexto(const std::string& psArquivo);
+bool arquivoTexto(const std::string &psArquivo);
 
-const int BUFSIZE=1024;
+const int BUFSIZE = 1024;
 
 #endif // UTIL_H

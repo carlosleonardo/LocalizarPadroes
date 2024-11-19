@@ -12,20 +12,23 @@ public:
 
     InformacoesArquivo();
 
-
-    inline std::string nomeArquivo() const {
+    inline const std::string &nomeArquivo() const
+    {
         return gsNomeArquivo;
     }
 
-    inline PosicoesOcorrencias posicoes() const {
+    inline const PosicoesOcorrencias &posicoes() const
+    {
         return goPosicoesOcorrencia;
     }
 
-    inline unsigned numeroOcorrencias() const {
+    inline unsigned numeroOcorrencias() const
+    {
         return gnNumeroOcorrenciasPalavra;
     }
 
     friend class ControleLocalizarPadroes;
+
 private:
     std::string gsNomeArquivo;
     unsigned gnNumeroOcorrenciasPalavra;

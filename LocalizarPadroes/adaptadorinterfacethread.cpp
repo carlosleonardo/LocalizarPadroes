@@ -1,6 +1,6 @@
 #include "adaptadorinterfacethread.h"
 
-AdaptadorInterfaceThread::AdaptadorInterfaceThread()
+AdaptadorInterfaceThread::AdaptadorInterfaceThread() : cancelado(false)
 {
 }
 
@@ -19,5 +19,3 @@ bool AdaptadorInterfaceThread::interrompido()
 {
     return cancelado;
 }
-
-

@@ -1,8 +1,7 @@
 #include "executorbusca.h"
 
-ExecutorBusca::ExecutorBusca(Funcao f):ThreadBoost()
+ExecutorBusca::ExecutorBusca(Funcao f) : ThreadBoost(), funcao(f)
 {
-    funcao = f;
 }
 std::string ExecutorBusca::getCaminhoArquivo() const
 {
@@ -16,7 +15,8 @@ void ExecutorBusca::setCaminhoArquivo(const std::string &value)
 
 void ExecutorBusca::executar()
 {
-    if (funcao) {
+    if (funcao)
+    {
         funcao(caminhoArquivo);
     }
 }
