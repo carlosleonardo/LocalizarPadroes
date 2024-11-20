@@ -56,26 +56,6 @@ INCLUDEPATH += $$VCPKG_ROOT/installed/x64-$$SUFIXO/include
 LIBS += -L$$VCPKG_ROOT/installed/x64-$$SUFIXO/lib
 
 
-# Força o MSBuild a tratar wchar_t como tipo interno
-# para não dar erros de linkedição em boost::filesystem3
-#win32 {
-#    lessThan(QT_MAJOR_VERSION, 5) {
-#       lessThan(QT_MINOR_VERSION, 1) {
-#          MSVC_FLAG_QT = /Zc:wchar_t
-#       }
-#    }
-#    win32-msvc2010:QMAKE_CXXFLAGS += $$MSVC_FLAG_QT -D_SCL_SECURE_NO_WARNINGS
-#    win32-msvc2012:QMAKE_CXXFLAGS += -D_SCL_SECURE_NO_WARNINGS
-#    INCLUDEPATH += $$BOOST_ROOT/boost_$$BOOST_VERSION # Necessário para o QtCreator achar os includes
-
-#Exceto o gcc, os demais compiladores windows usam auto link. Não é preciso especificar as bibliotecas
-#    g++:LIBS += \
-#    -llibboost_system-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN \
-#    -llibboost_filesystem-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN \
-#    -llibboost_regex-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN \
-#    -llibboost_thread-mgw$$GCC_VERSION-mt-$$BOOST_LIB_VERSION_WIN
-#}
-
 OTHER_FILES += \
     ResponsividadeGUI.txt \
     localizarpadroes.rc \

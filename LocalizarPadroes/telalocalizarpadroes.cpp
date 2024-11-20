@@ -7,7 +7,6 @@
 #include <QSettings>
 #include <QTime>
 #include <QDebug>
-#include <thread>
 #include <boost/bind.hpp>
 
 #include "telatestarexpressaoregular.h"
